@@ -1,0 +1,209 @@
+<template>
+  <main class="container">
+    <h1>家族用チャット</h1>
+
+    <section v-if="!user" class="card">
+      <h2>ログイン</h2>
+      <form @submit.prevent="handleLogin" class="form">
+        <label>
+          メールアドレス
+          <input v-model="email" type="email" required autocomplete="email" />
+        </label>
+        <label>
+          パスワード
+          <input v-model="password" type="password" required autocomplete="current-password" />
+        </label>
+        <button type="submit">ログイン</button>
+      </form>
+      <p v-if="error" class="error">{{ error }}</p>
+    </section>
+
+    <section v-else class="card">
+      <header class="toolbar">
+        <div>
+          <p class="muted">{{ displayName }} でログイン中</p>
+        </div>
+        <div class="actions">
+          <button class="plus" @click="openAdd" aria-label="追加">+</button>
+          <button @click="handleLogout">ログアウト</button>
+        </div>
+      </header>
+
+      <div v-if="screen === 'list'">
+        <h2>コメント一覧（最新20件）</h2>
+        <ul class="list">
+          <li v-for="item in messages" :key="item.id" class="item">
+            <div class="meta">
+              <strong>{{ item.displayName }}</strong>
+              <span>{{ formatJst(item.createdAt) }}</span>
+            </div>
+            <div class="body">{{ item.text }}</div>
+            <button class="edit" @click="openEdit(item)" aria-label="編集">✎</button>
+          </li>
+        </ul>
+      </div>
+
+      <div v-else-if="screen === 'add'">
+        <h2>コメント追加</h2>
+        <form @submit.prevent="submitAdd" class="form">
+          <label>
+            コメント
+            <textarea v-model="draft" required maxlength="500"></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" @click="backToList">戻る</button>
+            <button type="submit">登録</button>
+          </div>
+        </form>
+      </div>
+
+      <div v-else>
+        <h2>コメント編集</h2>
+        <form @submit.prevent="submitEdit" class="form">
+          <label>
+            コメント
+            <textarea v-model="draft" required maxlength="500"></textarea>
+          </label>
+          <div class="actions">
+            <button type="button" @click="backToList">戻る</button>
+            <button type="submit">登録</button>
+          </div>
+        </form>
+      </div>
+
+      <p v-if="error" class="error">{{ error }}</p>
+    </section>
+  </main>
+</template>
+
+<script setup>
+import { computed, onMounted, ref } from 'vue'
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut
+} from 'firebase/auth'
+import {
+  limitToLast,
+  onValue,
+  orderByChild,
+  push,
+  query,
+  ref as dbRef,
+  set,
+  update
+} from 'firebase/database'
+import { auth, db } from './firebase'
+
+const email = ref('')
+const password = ref('')
+const user = ref(null)
+const error = ref('')
+const messages = ref([])
+const screen = ref('list')
+const draft = ref('')
+const editingId = ref('')
+
+const displayName = computed(() => {
+  if (!user.value) return ''
+  return user.value.displayName || user.value.email?.split('@')[0] || '未設定'
+})
+
+function formatJst(epochMs) {
+  const dt = new Date(epochMs)
+  const yyyy = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric' })
+  const mm = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', month: '2-digit' })
+  const dd = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', day: '2-digit' })
+  const hh = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour: '2-digit', hour12: false })
+  const min = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', minute: '2-digit' })
+  return `${yyyy}/${mm}/${dd} ${hh}:${min}`
+}
+
+async function handleLogin() {
+  error.value = ''
+  try {
+    await signInWithEmailAndPassword(auth, email.value, password.value)
+    password.value = ''
+  } catch (e) {
+    error.value = 'ログインに失敗しました。入力値を確認してください。'
+  }
+}
+
+async function handleLogout() {
+  error.value = ''
+  try {
+    await signOut(auth)
+    screen.value = 'list'
+    draft.value = ''
+  } catch (e) {
+    error.value = 'ログアウトに失敗しました。'
+  }
+}
+
+function openAdd() {
+  draft.value = ''
+  editingId.value = ''
+  screen.value = 'add'
+}
+
+function openEdit(item) {
+  editingId.value = item.id
+  draft.value = item.text
+  screen.value = 'edit'
+}
+
+function backToList() {
+  screen.value = 'list'
+  draft.value = ''
+  editingId.value = ''
+}
+
+async function submitAdd() {
+  error.value = ''
+  try {
+    const now = Date.now()
+    const node = push(dbRef(db, 'messages'))
+    await set(node, {
+      uid: user.value.uid,
+      displayName: displayName.value,
+      text: draft.value.trim(),
+      createdAt: now,
+      updatedAt: now
+    })
+    backToList()
+  } catch (e) {
+    error.value = '登録に失敗しました。'
+  }
+}
+
+async function submitEdit() {
+  error.value = ''
+  try {
+    if (!editingId.value) return
+    await update(dbRef(db, `messages/${editingId.value}`), {
+      text: draft.value.trim(),
+      updatedAt: Date.now()
+    })
+    backToList()
+  } catch (e) {
+    error.value = '更新に失敗しました。'
+  }
+}
+
+onMounted(() => {
+  onAuthStateChanged(auth, (current) => {
+    user.value = current
+    if (!current) {
+      messages.value = []
+      return
+    }
+    const q = query(dbRef(db, 'messages'), orderByChild('createdAt'), limitToLast(20))
+    onValue(q, (snapshot) => {
+      const val = snapshot.val() || {}
+      const list = Object.entries(val).map(([id, v]) => ({ id, ...v }))
+      list.sort((a, b) => b.createdAt - a.createdAt)
+      messages.value = list
+    })
+  })
+})
+</script>
