@@ -32,11 +32,13 @@
 
       <template v-else>
       <header class="toolbar">
+        <div class="left-actions">
+          <button class="plus" @click="openAdd" aria-label="追加">+</button>
+        </div>
         <div>
           <p class="muted">{{ displayName }} でログイン中</p>
         </div>
-        <div class="actions">
-          <button class="plus" @click="openAdd" aria-label="追加">+</button>
+        <div class="right-actions">
           <button @click="handleLogout">ログアウト</button>
         </div>
       </header>
