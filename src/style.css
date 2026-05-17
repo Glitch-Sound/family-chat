@@ -140,6 +140,9 @@ button:hover {
 
 .app-header-text .login-status {
   margin: 2px 0 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .header-actions {
