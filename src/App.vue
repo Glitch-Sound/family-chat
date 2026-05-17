@@ -19,6 +19,18 @@
     </section>
 
     <section v-else class="card">
+      <div v-if="needsDisplayName">
+        <h2>表示名の設定</h2>
+        <form @submit.prevent="saveDisplayName" class="form">
+          <label>
+            表示名
+            <input v-model="nameInput" type="text" required maxlength="30" />
+          </label>
+          <button type="submit">保存</button>
+        </form>
+      </div>
+
+      <template v-else>
       <header class="toolbar">
         <div>
           <p class="muted">{{ displayName }} でログイン中</p>
@@ -72,6 +84,7 @@
       </div>
 
       <p v-if="error" class="error">{{ error }}</p>
+      </template>
     </section>
   </main>
 </template>
@@ -81,7 +94,8 @@ import { computed, onMounted, ref } from 'vue'
 import {
   onAuthStateChanged,
   signInWithEmailAndPassword,
-  signOut
+  signOut,
+  updateProfile
 } from 'firebase/auth'
 import {
   limitToLast,
@@ -103,11 +117,13 @@ const messages = ref([])
 const screen = ref('list')
 const draft = ref('')
 const editingId = ref('')
+const nameInput = ref('')
 
 const displayName = computed(() => {
   if (!user.value) return ''
   return user.value.displayName || user.value.email?.split('@')[0] || '未設定'
 })
+const needsDisplayName = computed(() => Boolean(user.value && !user.value.displayName))
 
 function formatJst(epochMs) {
   const dt = new Date(epochMs)
@@ -137,6 +153,19 @@ async function handleLogout() {
     draft.value = ''
   } catch (e) {
     error.value = 'ログアウトに失敗しました。'
+  }
+}
+
+async function saveDisplayName() {
+  error.value = ''
+  try {
+    const trimmed = nameInput.value.trim()
+    if (!user.value || !trimmed) return
+    await updateProfile(user.value, { displayName: trimmed })
+    user.value = auth.currentUser
+    nameInput.value = ''
+  } catch (e) {
+    error.value = '表示名の保存に失敗しました。'
   }
 }
 
@@ -193,8 +222,12 @@ async function submitEdit() {
 onMounted(() => {
   onAuthStateChanged(auth, (current) => {
     user.value = current
+    if (current && !current.displayName) {
+      nameInput.value = current.email?.split('@')[0] || ''
+    }
     if (!current) {
       messages.value = []
+      nameInput.value = ''
       return
     }
     const q = query(dbRef(db, 'messages'), orderByChild('createdAt'), limitToLast(20))
