@@ -100,7 +100,9 @@
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
-              <button type="button" @click="markAsRead">読んだ</button>
+              <button type="button" @click="toggleReadAndBack">
+                {{ readByMomDraft ? '読了解除' : '読んだ' }}
+              </button>
               <button type="submit">登録</button>
             </div>
           </form>
@@ -232,17 +234,14 @@ function backToList() {
   readByMomDraft.value = false
 }
 
-function toggleReadByMom() {
-  readByMomDraft.value = !readByMomDraft.value
-}
-
-async function markAsRead() {
+async function toggleReadAndBack() {
   error.value = ''
   try {
     if (!editingId.value) return
-    readByMomDraft.value = true
+    const next = !readByMomDraft.value
+    readByMomDraft.value = next
     await update(dbRef(db, `messages/${editingId.value}`), {
-      readByMom: true,
+      readByMom: next,
       updatedAt: Date.now()
     })
     backToList()
