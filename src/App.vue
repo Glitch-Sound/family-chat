@@ -86,9 +86,6 @@
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
-              <button type="button" @click="toggleReadByMom">
-                {{ readByMomDraft ? '読了済み' : '読んだ' }}
-              </button>
               <button type="submit">登録</button>
             </div>
           </form>
@@ -103,6 +100,9 @@
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
+              <button type="button" @click="toggleReadByMom">
+                {{ readByMomDraft ? '読了済み' : '読んだ' }}
+              </button>
               <button type="submit">登録</button>
             </div>
           </form>
