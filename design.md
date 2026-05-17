@@ -112,11 +112,11 @@ GitHub Pages + Firebase の環境変数管理にて実現すること。
 
 - [x] GitHubで本リポジトリを作成し、ローカルにクローンする。
 - [x] Vue3プロジェクトを作成する（例: Vite + Vue）。
-- [ ] Firebaseプロジェクトを作成する。
-- [ ] Firebase Authentication を有効化し、メール/パスワード認証をONにする。
-- [ ] 家族4名分のユーザーを Firebase Authentication に事前作成し、各ユーザーの表示名（displayName）を設定する。
-- [ ] Firebase Realtime Database を作成する。
-- [ ] Realtime Database の Security Rules を設定し、認証済みユーザーのみ read/write を許可する。
+- [x] Firebaseプロジェクトを作成する。
+- [x] Firebase Authentication を有効化し、メール/パスワード認証をONにする。
+- [x] 家族4名分のユーザーを Firebase Authentication に事前作成し、各ユーザーの表示名（displayName）を設定する。
+- [x] Firebase Realtime Database を作成する。
+- [x] Realtime Database の Security Rules を設定し、認証済みユーザーのみ read/write を許可する。
 - [x] チャットデータの保存形式を実装する（`uid`, `displayName`, `text`, `createdAt`, `updatedAt`）。
 - [x] ログイン画面を実装する（メール/パスワード入力、ログイン、Authセッション永続化）。
 - [x] 表示画面を実装する（最新20件を `createdAt` 降順で表示、名前・日時・コメント表示、追加/編集ボタン表示）。
@@ -124,7 +124,7 @@ GitHub Pages + Firebase の環境変数管理にて実現すること。
 - [x] 編集画面を実装する（既存コメントの初期表示、更新登録、戻る、全員のコメント編集可）。
 - [x] 日時表示を実装する（UTCミリ秒を日本時間 `YYYY/MM/DD HH:mm` で表示）。
 - [ ] `.env.example` を作成し、Firebase設定キー名のみをコミットする。
-- [ ] GitHub Actions Secrets に Firebase 設定の実値を登録する。
+- [x] GitHub Actions Secrets に Firebase 設定の実値を登録する。
 - [x] GitHub Actions でビルド時に `.env.production` を生成して GitHub Pages にデプロイするワークフローを作成する。
 - [ ] GitHub Pages を有効化し、Actionsデプロイを公開設定にする。
 - [ ] 実機確認を行う（PC/スマホ/タブレットでログイン、投稿、編集、表示件数、日時表示を確認）。
