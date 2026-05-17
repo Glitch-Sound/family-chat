@@ -230,7 +230,7 @@ button:hover {
   background: #f8fafc;
   border: 1px solid #f1f5f9;
   border-radius: 8px;
-  padding: 6px 8px;
+  padding: 0;
 }
 
 .meta-time {
