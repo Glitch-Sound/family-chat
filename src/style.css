@@ -221,8 +221,18 @@ button:hover {
 }
 
 .read-check {
-  color: #dc2626;
+  color: #ffffff;
+  background: #dc2626;
+  border: 1px solid #b91c1c;
+  border-radius: 999px;
+  width: 20px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   font-weight: 700;
+  font-size: 0.9rem;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.15);
 }
 
 .body {
