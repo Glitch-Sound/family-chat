@@ -116,23 +116,20 @@ button:hover {
   transform: translateY(-1px);
 }
 
-.toolbar {
+.app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
-.left-actions,
-.right-actions {
-  display: flex;
-  gap: 8px;
-  align-items: center;
+.app-header-text h1 {
+  margin: 0;
 }
 
-.right-actions {
-  margin-left: auto;
+.app-header-text .login-status {
+  margin: 2px 0 0;
 }
 
 .plus {
@@ -145,6 +142,34 @@ button:hover {
   align-items: center;
   justify-content: center;
   line-height: 1;
+}
+
+.logout-btn {
+  color: #334155;
+  background: linear-gradient(160deg, #e5e7eb, #d1d5db);
+  border-color: #cbd5e1;
+}
+
+.content-scroll {
+  max-height: min(68vh, 620px);
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none;
+}
+
+.content-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.list-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.list-head h2 {
+  margin: 0;
 }
 
 .list {
@@ -224,16 +249,10 @@ button:hover {
     padding: 12px;
     border-radius: 14px;
   }
-  .toolbar {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      "left right"
-      "status status";
-    align-items: center;
-    gap: 8px;
+  .app-header {
+    align-items: flex-start;
   }
-  .toolbar > .left-actions { grid-area: left; }
-  .toolbar > .right-actions { grid-area: right; }
-  .toolbar > div:not(.left-actions):not(.right-actions) { grid-area: status; }
+  .content-scroll {
+    max-height: 64vh;
+  }
 }

@@ -1,7 +1,6 @@
 <template>
   <main class="container">
-    <h1>家族用チャット</h1>
-    <p v-if="user && !needsDisplayName" class="login-status">{{ displayName }} でログイン中</p>
+    <h1 v-if="!user || needsDisplayName">家族用チャット</h1>
 
     <section v-if="!user" class="card">
       <h2>ログイン</h2>
@@ -32,60 +31,67 @@
       </div>
 
       <template v-else>
-      <header class="toolbar">
-        <div class="left-actions">
-          <button class="plus" @click="openAdd" aria-label="追加">+</button>
+      <header class="app-header">
+        <div class="app-header-text">
+          <h1>家族用チャット</h1>
+          <p class="login-status">{{ displayName }} でログイン中</p>
         </div>
-        <div class="right-actions">
-          <button @click="handleLogout">ログアウト</button>
+        <div>
+          <button class="logout-btn" @click="handleLogout">ログアウト</button>
         </div>
       </header>
 
-      <div v-if="screen === 'list'">
-        <h2>コメント一覧（最新20件）</h2>
-        <ul class="list">
-          <li v-for="item in messages" :key="item.id" class="item">
-            <div class="meta">
-              <strong>{{ item.displayName }}</strong>
-              <span>{{ formatJst(item.createdAt) }}</span>
-            </div>
-            <div class="body">{{ item.text }}</div>
-            <div class="item-actions">
-              <button class="edit" @click="openEdit(item)" aria-label="編集">✎</button>
-            </div>
-          </li>
-        </ul>
-      </div>
-
-      <div v-else-if="screen === 'add'">
-        <h2>コメント追加</h2>
-        <form @submit.prevent="submitAdd" class="form">
-          <label>
-            コメント
-            <textarea v-model="draft" required maxlength="500"></textarea>
-          </label>
-          <div class="form-actions">
-            <button type="button" @click="backToList">戻る</button>
-            <button type="submit">登録</button>
+      <div class="content-scroll">
+        <div v-if="screen === 'list'">
+          <div class="list-head">
+            <button class="plus" @click="openAdd" aria-label="追加">+</button>
+            <h2>コメント一覧（最新20件）</h2>
           </div>
-        </form>
-      </div>
+          <ul class="list">
+            <li v-for="item in messages" :key="item.id" class="item">
+              <div class="meta">
+                <strong>{{ item.displayName }}</strong>
+                <span>{{ formatJst(item.createdAt) }}</span>
+              </div>
+              <div class="body">{{ item.text }}</div>
+              <div class="item-actions">
+                <button class="edit" @click="openEdit(item)" aria-label="編集">✎</button>
+              </div>
+            </li>
+          </ul>
+        </div>
 
-      <div v-else>
-        <h2>コメント編集</h2>
-        <form @submit.prevent="submitEdit" class="form">
-          <label>
-            コメント
-            <textarea v-model="draft" required maxlength="500"></textarea>
-          </label>
-          <div class="form-actions">
-            <button type="button" @click="backToList">戻る</button>
-            <button type="submit">登録</button>
-          </div>
-        </form>
-      </div>
+        <div v-else-if="screen === 'add'">
+          <h2>コメント追加</h2>
+          <form @submit.prevent="submitAdd" class="form">
+            <label>
+              コメント
+              <textarea v-model="draft" required maxlength="500"></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="button" @click="backToList">戻る</button>
+              <button type="submit">登録</button>
+            </div>
+            </div>
+          </form>
+        </div>
 
-      <p v-if="error" class="error">{{ error }}</p>
+        <div v-else>
+          <h2>コメント編集</h2>
+          <form @submit.prevent="submitEdit" class="form">
+            <label>
+              コメント
+              <textarea v-model="draft" required maxlength="500"></textarea>
+            </label>
+            <div class="form-actions">
+              <button type="button" @click="backToList">戻る</button>
+              <button type="submit">登録</button>
+            </div>
+          </form>
+        </div>
+
+        <p v-if="error" class="error">{{ error }}</p>
+      </div>
       </template>
     </section>
   </main>
