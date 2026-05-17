@@ -5,7 +5,7 @@
         <h1>家族用チャット</h1>
         <p class="login-status">{{ displayName }} でログイン中</p>
       </div>
-      <div>
+      <div class="header-actions">
         <button class="logout-btn" @click="handleLogout">ログアウト</button>
       </div>
     </header>
@@ -41,6 +41,19 @@
       </div>
 
       <template v-else>
+      <div v-if="renaming" class="rename-box">
+        <h2>表示名の変更</h2>
+        <form @submit.prevent="saveDisplayName" class="form">
+          <label>
+            表示名
+            <input v-model="nameInput" type="text" required maxlength="30" />
+          </label>
+          <div class="form-actions">
+            <button type="button" @click="cancelRename">キャンセル</button>
+            <button type="submit">保存</button>
+          </div>
+        </form>
+      </div>
       <div class="content-scroll">
         <div v-if="screen === 'list'">
           <div class="list-head">
@@ -125,6 +138,7 @@ const screen = ref('list')
 const draft = ref('')
 const editingId = ref('')
 const nameInput = ref('')
+const renaming = ref(false)
 
 const displayName = computed(() => {
   if (!user.value) return ''
@@ -153,6 +167,10 @@ async function handleLogin() {
   try {
     await signInWithEmailAndPassword(auth, email.value, password.value)
     password.value = ''
+    if (!needsDisplayName.value) {
+      nameInput.value = auth.currentUser?.displayName || auth.currentUser?.email?.split('@')[0] || ''
+      renaming.value = true
+    }
   } catch (e) {
     error.value = 'ログインに失敗しました。入力値を確認してください。'
   }
@@ -164,6 +182,7 @@ async function handleLogout() {
     await signOut(auth)
     screen.value = 'list'
     draft.value = ''
+    renaming.value = false
   } catch (e) {
     error.value = 'ログアウトに失敗しました。'
   }
@@ -177,9 +196,14 @@ async function saveDisplayName() {
     await updateProfile(user.value, { displayName: trimmed })
     user.value = auth.currentUser
     nameInput.value = ''
+    renaming.value = false
   } catch (e) {
     error.value = '表示名の保存に失敗しました。'
   }
+}
+
+function cancelRename() {
+  renaming.value = false
 }
 
 function openAdd() {
@@ -241,6 +265,7 @@ onMounted(() => {
     if (!current) {
       messages.value = []
       nameInput.value = ''
+      renaming.value = false
       return
     }
     const q = query(dbRef(db, 'messages'), orderByChild('createdAt'), limitToLast(20))
