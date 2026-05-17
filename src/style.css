@@ -227,8 +227,8 @@ button:hover {
   gap: 8px;
   font-size: 0.84rem;
   color: var(--text-sub);
-  background: #f1f5f9;
-  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
   border-radius: 8px;
   padding: 6px 8px;
 }
