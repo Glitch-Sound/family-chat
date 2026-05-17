@@ -1,6 +1,7 @@
 <template>
   <main class="container">
     <h1>家族用チャット</h1>
+    <p v-if="user && !needsDisplayName" class="login-status">{{ displayName }} でログイン中</p>
 
     <section v-if="!user" class="card">
       <h2>ログイン</h2>
@@ -34,9 +35,6 @@
       <header class="toolbar">
         <div class="left-actions">
           <button class="plus" @click="openAdd" aria-label="追加">+</button>
-        </div>
-        <div>
-          <p class="muted">{{ displayName }} でログイン中</p>
         </div>
         <div class="right-actions">
           <button @click="handleLogout">ログアウト</button>
