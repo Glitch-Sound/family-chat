@@ -62,7 +62,7 @@
             コメント
             <textarea v-model="draft" required maxlength="500"></textarea>
           </label>
-          <div class="actions">
+          <div class="form-actions">
             <button type="button" @click="backToList">戻る</button>
             <button type="submit">登録</button>
           </div>
@@ -76,7 +76,7 @@
             コメント
             <textarea v-model="draft" required maxlength="500"></textarea>
           </label>
-          <div class="actions">
+          <div class="form-actions">
             <button type="button" @click="backToList">戻る</button>
             <button type="submit">登録</button>
           </div>
