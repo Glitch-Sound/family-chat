@@ -50,7 +50,9 @@
               <span>{{ formatJst(item.createdAt) }}</span>
             </div>
             <div class="body">{{ item.text }}</div>
-            <button class="edit" @click="openEdit(item)" aria-label="編集">✎</button>
+            <div class="item-actions">
+              <button class="edit" @click="openEdit(item)" aria-label="編集">✎</button>
+            </div>
           </li>
         </ul>
       </div>
