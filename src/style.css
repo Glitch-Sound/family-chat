@@ -214,6 +214,17 @@ button:hover {
   color: var(--text-sub);
 }
 
+.meta-time {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.read-check {
+  color: #dc2626;
+  font-weight: 700;
+}
+
 .body {
   margin-top: 8px;
   white-space: pre-wrap;

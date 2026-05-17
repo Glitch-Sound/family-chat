@@ -64,7 +64,10 @@
             <li v-for="item in messages" :key="item.id" class="item">
               <div class="meta">
                 <strong>{{ item.displayName }}</strong>
-                <span>{{ formatJst(item.createdAt) }}</span>
+                <span class="meta-time">
+                  <span v-if="item.readByMom" class="read-check" aria-label="読了">✓</span>
+                  <span>{{ formatJst(item.createdAt) }}</span>
+                </span>
               </div>
               <div class="body">{{ item.text }}</div>
               <div class="item-actions">
@@ -83,6 +86,9 @@
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
+              <button type="button" @click="toggleReadByMom">
+                {{ readByMomDraft ? '読了済み' : '読んだ' }}
+              </button>
               <button type="submit">登録</button>
             </div>
           </form>
@@ -139,6 +145,7 @@ const draft = ref('')
 const editingId = ref('')
 const nameInput = ref('')
 const renaming = ref(false)
+const readByMomDraft = ref(false)
 
 const displayName = computed(() => {
   if (!user.value) return ''
@@ -209,12 +216,14 @@ function cancelRename() {
 function openAdd() {
   draft.value = ''
   editingId.value = ''
+  readByMomDraft.value = false
   screen.value = 'add'
 }
 
 function openEdit(item) {
   editingId.value = item.id
   draft.value = item.text
+  readByMomDraft.value = Boolean(item.readByMom)
   screen.value = 'edit'
 }
 
@@ -222,6 +231,11 @@ function backToList() {
   screen.value = 'list'
   draft.value = ''
   editingId.value = ''
+  readByMomDraft.value = false
+}
+
+function toggleReadByMom() {
+  readByMomDraft.value = !readByMomDraft.value
 }
 
 async function submitAdd() {
@@ -234,7 +248,8 @@ async function submitAdd() {
       displayName: displayName.value,
       text: draft.value.trim(),
       createdAt: now,
-      updatedAt: now
+      updatedAt: now,
+      readByMom: false
     })
     backToList()
   } catch (e) {
@@ -248,7 +263,8 @@ async function submitEdit() {
     if (!editingId.value) return
     await update(dbRef(db, `messages/${editingId.value}`), {
       text: draft.value.trim(),
-      updatedAt: Date.now()
+      updatedAt: Date.now(),
+      readByMom: readByMomDraft.value
     })
     backToList()
   } catch (e) {
