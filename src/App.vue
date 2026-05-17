@@ -127,12 +127,18 @@ const needsDisplayName = computed(() => Boolean(user.value && !user.value.displa
 
 function formatJst(epochMs) {
   const dt = new Date(epochMs)
-  const yyyy = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', year: 'numeric' })
-  const mm = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', month: '2-digit' })
-  const dd = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', day: '2-digit' })
-  const hh = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', hour: '2-digit', hour12: false })
-  const min = dt.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo', minute: '2-digit' })
-  return `${yyyy}/${mm}/${dd} ${hh}:${min}`
+  const formatter = new Intl.DateTimeFormat('ja-JP', {
+    timeZone: 'Asia/Tokyo',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false
+  })
+  const parts = formatter.formatToParts(dt)
+  const map = Object.fromEntries(parts.map((part) => [part.type, part.value]))
+  return `${map.year}/${map.month}/${map.day} ${map.hour}:${map.minute}`
 }
 
 async function handleLogin() {
