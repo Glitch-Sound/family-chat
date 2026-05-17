@@ -106,6 +106,10 @@ textarea {
   min-height: 110px;
 }
 
+.editor-textarea {
+  min-height: 220px;
+}
+
 button {
   cursor: pointer;
   color: #1e3a8a;

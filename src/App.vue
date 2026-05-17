@@ -82,7 +82,7 @@
           <form @submit.prevent="submitAdd" class="form">
             <label>
               コメント
-              <textarea v-model="draft" required maxlength="500"></textarea>
+              <textarea class="editor-textarea" v-model="draft" required maxlength="500"></textarea>
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
@@ -96,7 +96,7 @@
           <form @submit.prevent="submitEdit" class="form">
             <label>
               コメント
-              <textarea v-model="draft" required maxlength="500"></textarea>
+              <textarea class="editor-textarea" v-model="draft" required maxlength="500"></textarea>
             </label>
             <div class="form-actions">
               <button type="button" @click="backToList">戻る</button>
