@@ -72,7 +72,6 @@
               <button type="button" @click="backToList">戻る</button>
               <button type="submit">登録</button>
             </div>
-            </div>
           </form>
         </div>
 
