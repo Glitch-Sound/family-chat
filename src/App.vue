@@ -28,7 +28,7 @@
       <p v-if="error" class="error">{{ error }}</p>
     </section>
 
-    <section v-else class="card">
+    <section v-else class="card chat-card">
       <div v-if="needsDisplayName">
         <h2>表示名の設定</h2>
         <form @submit.prevent="saveDisplayName" class="form">
