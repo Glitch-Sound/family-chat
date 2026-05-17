@@ -218,19 +218,22 @@ button:hover {
   border: 1px solid rgba(59, 130, 246, 0.2);
   background: rgba(255, 255, 255, 0.86);
   border-radius: 12px;
-  padding: 12px;
+  overflow: hidden;
 }
 
-.meta {
+.item-header {
   display: flex;
   justify-content: space-between;
   gap: 8px;
   font-size: 0.84rem;
   color: var(--text-sub);
   background: #f8fafc;
-  border: 1px solid #f1f5f9;
-  border-radius: 8px;
-  padding: 0;
+  border-bottom: 1px solid #eef2f7;
+  padding: 8px 10px;
+}
+
+.item-content {
+  padding: 10px;
 }
 
 .meta-time {
@@ -247,7 +250,6 @@ button:hover {
 }
 
 .body {
-  margin-top: 8px;
   white-space: pre-wrap;
   word-break: break-word;
   color: #1e293b;
@@ -262,7 +264,7 @@ button:hover {
 .item-actions {
   display: flex;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .form-actions {

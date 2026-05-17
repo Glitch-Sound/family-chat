@@ -67,7 +67,7 @@
             </div>
             <ul class="list">
               <li v-for="item in messages" :key="item.id" class="item">
-                <div class="meta">
+                <div class="item-header">
                   <strong>{{ item.displayName }}</strong>
                   <span class="meta-time">
                     <span
@@ -79,15 +79,17 @@
                     <span>{{ formatJst(item.createdAt) }}</span>
                   </span>
                 </div>
-                <div class="body">{{ item.text }}</div>
-                <div class="item-actions">
-                  <button
-                    class="edit"
-                    @click="openEdit(item)"
-                    aria-label="編集"
-                  >
-                    ✎
-                  </button>
+                <div class="item-content">
+                  <div class="body">{{ item.text }}</div>
+                  <div class="item-actions">
+                    <button
+                      class="edit"
+                      @click="openEdit(item)"
+                      aria-label="編集"
+                    >
+                      ✎
+                    </button>
+                  </div>
                 </div>
               </li>
             </ul>
