@@ -1,6 +1,16 @@
 <template>
   <main class="container">
-    <h1 v-if="!user || needsDisplayName">家族用チャット</h1>
+    <header v-if="user && !needsDisplayName" class="app-header-fixed">
+      <div class="app-header-text">
+        <h1>家族用チャット</h1>
+        <p class="login-status">{{ displayName }} でログイン中</p>
+      </div>
+      <div>
+        <button class="logout-btn" @click="handleLogout">ログアウト</button>
+      </div>
+    </header>
+
+    <h1 v-else>家族用チャット</h1>
 
     <section v-if="!user" class="card">
       <h2>ログイン</h2>
@@ -31,16 +41,6 @@
       </div>
 
       <template v-else>
-      <header class="app-header">
-        <div class="app-header-text">
-          <h1>家族用チャット</h1>
-          <p class="login-status">{{ displayName }} でログイン中</p>
-        </div>
-        <div>
-          <button class="logout-btn" @click="handleLogout">ログアウト</button>
-        </div>
-      </header>
-
       <div class="content-scroll">
         <div v-if="screen === 'list'">
           <div class="list-head">
